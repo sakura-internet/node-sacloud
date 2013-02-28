@@ -14,5 +14,6 @@
     "sacloud"
   ],
   "author": "sakura-internet",
-  "license": "MIT"
+  "license": "MIT",
+  "bin": { "sacloud": "./bin/sacloud" }
 }
