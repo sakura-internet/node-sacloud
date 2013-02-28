@@ -44,6 +44,6 @@ var client = sacloud.createClient({
 	apiRoot          : config.apiRoot
 });
 
-client.createRequestByCommand(opt.args).setOption(opt).send(function(err, response) {
+client.createRequest(opt.args).setOption(opt).send(function(err, response) {
 	
 });
