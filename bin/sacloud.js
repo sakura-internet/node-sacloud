@@ -26,6 +26,7 @@ if (!!opt.apiRoot)           config.apiRoot = opt.apiRoot;
 
 if (opt.args.length !== 0 && opt.args[0] === 'config') {
 	fs.writeFileSync(configFilePath, JSON.stringify(config, null, '  '));
+	fs.chmodSync(configFilePath, 0600);
 	
 	console.log(configFilePath + ':', fs.readFileSync(configFilePath, 'ascii'));
 	
