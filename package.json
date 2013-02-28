@@ -15,5 +15,10 @@
   ],
   "author": "sakura-internet",
   "license": "MIT",
-  "bin": { "sacloud": "./bin/sacloud.js" }
+  "bin": {
+    "sacloud": "./bin/sacloud.js"
+  },
+  "dependencies": {
+    "tav": "~0.1.0"
+  }
 }
