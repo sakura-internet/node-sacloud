@@ -7,6 +7,7 @@ var sacloud = require('../');
 var opt     = require('tav').set();
 var fs      = require('fs');
 var path    = require('path');
+var util    = require('util');
 
 /**
  * Config
@@ -20,17 +21,17 @@ var configFilePath = path.resolve(
 
 if (fs.existsSync(configFilePath) === true) config = require(configFilePath);
 
-if (!!opt.accessToken)       config.accessToken = opt.accessToken;
+if (!!opt.accessToken)       config.accessToken       = opt.accessToken;
 if (!!opt.accessTokenSecret) config.accessTokenSecret = opt.accessTokenSecret;
-if (!!opt.apiRoot)           config.apiRoot = opt.apiRoot;
+if (!!opt.apiRoot)           config.apiRoot           = opt.apiRoot;
 
 if (opt.args.length !== 0 && opt.args[0] === 'config') {
 	fs.writeFileSync(configFilePath, JSON.stringify(config, null, '  '));
 	fs.chmodSync(configFilePath, 0600);
 	
-	console.log(configFilePath + ':', fs.readFileSync(configFilePath, 'ascii'));
+	util.puts(configFilePath + ':', fs.readFileSync(configFilePath, 'ascii'));
 	
-	process.exit(0);
+	return process.exit(0);
 }
 
 if (!config.apiRoot) config.apiRoot = 'https://secure.sakura.ad.jp/cloud/api/cloud/1.0/';
@@ -38,7 +39,6 @@ if (!config.apiRoot) config.apiRoot = 'https://secure.sakura.ad.jp/cloud/api/clo
 /**
  * Request
 **/
-
 var client = sacloud.createClient({
 	accessToken      : config.accessToken,
 	accessTokenSecret: config.accessTokenSecret,
@@ -47,4 +47,12 @@ var client = sacloud.createClient({
 
 client.createRequest(opt.args).setOption(opt).send(function(err, response) {
 	
+	if (err) {
+		util.error(err);
+		return process.exit(1);
+	}
+	
+	util.puts(util.inspect(response, false, null, true));
+	
+	return process.exit(0);
 });
