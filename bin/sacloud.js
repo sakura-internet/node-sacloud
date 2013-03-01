@@ -45,14 +45,14 @@ var client = sacloud.createClient({
 	apiRoot          : config.apiRoot
 });
 
-client.createRequest(opt.args).setOption(opt).send(function(err, response) {
+client.createRequest(opt.args).setOption(opt).send(function(err, result) {
 	
 	if (err) {
 		util.error(err);
 		return process.exit(1);
 	}
 	
-	util.puts(util.inspect(response, false, null, true));
+	//util.puts(util.inspect(result, false, null, true));
 	
 	return process.exit(0);
 });
