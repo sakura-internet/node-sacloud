@@ -108,7 +108,7 @@ reqs.run(function(err, result, requestedCount, totalCount) {
 			!!body[0].id   && h.push('id');
 			!!body[0].name && h.push('name');
 			
-			!!body[0].ipAddress                       && h.push('ip address');
+			!!body[0].ipAddress                       && h.push('ipaddress');
 			(result.responseInfo.key === 'ipaddress') && h.push('hostname');
 			!!body[0].subnet                          && h.push('subnet id');
 			typeof body[0].interface !== 'undefined' && h.push('server id');
@@ -151,11 +151,50 @@ reqs.run(function(err, result, requestedCount, totalCount) {
 			
 			var table = new Table();
 			
-			!!body.id   && table.push({ id  : body.id });
-			!!body.name && table.push({ name: body.name });
+			!!body.id          && table.push({ id           : body.id });
+			!!body.zone        && table.push({ zone         : [body.zone.id, body.zone.name].join(':') });
+			!!body.name        && table.push({ name         : body.name });
+			!!body.description && table.push({ description  : body.description });
+			!!body.tags        && table.push({ tags         : body.tags.join(', ') });
+			!!body.macAddress  && table.push({ 'mac address': body.macAddress });
 			
 			if (result.responseInfo.key === 'server') {
+				table.push({ plan  : [body.serverPlan.id, body.serverPlan.name].join(':') });
+				table.push({ cpu   : body.serverPlan.cpu });
+				table.push({ memory: body.serverPlan.memoryMB + 'MB' });
 				table.push({ status: body.instance.status });
+				
+				//table.push({ 'before status'    : body.instance.beforeStatus });
+				table.push({ 'status changed at': body.instance.statusChangedAt.replace('T', ' ').replace('+09:00', '') });
+				table.push({ 'hypervisor'       : !!body.instance.host ? body.instance.host.systemVersion : '' });
+				
+				!!body.instance.cdrom && table.push({ cdrom:  [body.instance.cdrom.id, body.instance.cdrom.name].join(':') });
+				
+				var disks = [];
+				
+				body.disks.forEach(function(disk, i) {
+					
+					disks.push([disk.id, disk.name].join(':') + [, disk.connection, disk.sizeMB + 'MB'].join(', '));
+				});
+				
+				table.push({ disk: disks.join("\n") });
+				
+				var ifaces = [];
+				
+				body.interfaces.forEach(function(iface, i) {
+					
+					var connection = iface.ipAddress || (!!iface['switch'] ? ('(switch)' + [iface['switch'].id, iface['switch'].name].join(':')) : '(disconnected)');
+					
+					ifaces.push([iface.id, iface.macAddress].join(':') + ' -> ' + connection);
+				});
+				
+				table.push({ interface: ifaces.join("\n") });
+			}
+			
+			if (result.responseInfo.key === 'interface') {
+				!!body.packetFilter && table.push({ 'packetfilter': [body.packetFilter.id, body.packetFilter.name].join(':') });
+				
+				!!body['switch'] && table.push({ 'switch': [body['switch'].id, body['switch'].name].join(':') });
 			}
 			
 			!!body.createdAt && table.push({ 'created at': body.createdAt.replace('T', ' ').replace('+09:00', '') });
