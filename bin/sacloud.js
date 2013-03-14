@@ -20,6 +20,22 @@ var configFilePath = path.resolve(
 	path.join(process.env[isWindows ? 'USERPROFILE' : 'HOME'], '.sacloudcfg.json')
 );
 
+var tableChar = {
+	'top'         : '-',
+	'top-mid'     : '+',
+	'top-left'    : '+',
+	'top-right'   : '+',
+	'bottom'      : '-',
+	'bottom-mid'  : '+',
+	'bottom-left' : '+',
+	'bottom-right': '+',
+	'left'        : '|',
+	'left-mid'    : '|',
+	'mid'         : '-',
+	'mid-mid'     : '+',
+	'right'       : '|',
+	'right-mid'   : '|'
+};
 
 /**
  * Config
@@ -88,6 +104,14 @@ reqs.run(function(err, result, requestedCount, totalCount) {
 		return;
 	}
 	
+	// status
+	console.log(
+		result.requestInfo.url, '->',
+		result.responseInfo.status, result.responseInfo.statusText,
+		'(' + requestedCount + '/' + totalCount + ')',
+		'~' + (result.responseInfo.latency / 1000) + 'sec'
+	);
+	
 	if (err) {
 		util.error(err);
 		return;
@@ -96,14 +120,6 @@ reqs.run(function(err, result, requestedCount, totalCount) {
 	if (opt.inspect) {
 		util.puts(util.inspect(result, false, null, true));
 	}
-	
-	// status
-	console.log(
-		result.requestInfo.url, '->',
-		result.responseInfo.status, result.responseInfo.statusText,
-		'(' + requestedCount + '/' + totalCount + ')',
-		'~' + (result.responseInfo.latency / 1000) + 'sec'
-	);
 	
 	var body = result.response[result.responseInfo.key];
 	
@@ -127,7 +143,8 @@ reqs.run(function(err, result, requestedCount, totalCount) {
 			!!body[0].createdAt && h.push('created at');
 			
 			var table = new Table({
-				head: h
+				head : h,
+				chars: tableChar
 			});
 			
 			body.forEach(function(res, i) {
@@ -156,7 +173,7 @@ reqs.run(function(err, result, requestedCount, totalCount) {
 		
 		case 'resource':
 			
-			var table = new Table();
+			var table = new Table({ chars: tableChar });
 			
 			!!body.id          && table.push({ id           : body.id });
 			!!body.zone        && table.push({ zone         : [body.zone.id, body.zone.name].join(':') });
