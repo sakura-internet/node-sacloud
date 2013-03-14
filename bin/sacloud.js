@@ -95,7 +95,8 @@ reqs.run(function(err, result, requestedCount, totalCount) {
 	console.log(
 		result.requestInfo.url, '->',
 		result.responseInfo.status, result.responseInfo.statusText,
-		'(' + requestedCount + '/' + totalCount + ')'
+		'(' + requestedCount + '/' + totalCount + ')',
+		'~' + (result.responseInfo.latency / 1000) + 'sec'
 	);
 	
 	var body = result.response[result.responseInfo.key];
