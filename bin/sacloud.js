@@ -11,14 +11,20 @@ var path     = require('path');
 var util     = require('util');
 
 /**
- * Config
+ * Initialize
 **/
-var config = {};
+var isWindows = (process.platform === 'win32');
 
 var configFilePath = path.resolve(
 	opt.config ||
-	path.join(process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'], '.sacloudcfg.json')
+	path.join(process.env[isWindows ? 'USERPROFILE' : 'HOME'], '.sacloudcfg.json')
 );
+
+
+/**
+ * Config
+**/
+var config = {};
 
 if (fs.existsSync(configFilePath) === true) config = require(configFilePath);
 
@@ -56,7 +62,7 @@ var commander = sacloud.createCommander({
 /**
  * Complete
 **/
-if (process.platform !== 'win32') commander.complete();
+if (!isWindows) commander.complete();
 
 /**
  * Create Requests
