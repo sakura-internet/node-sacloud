@@ -56,7 +56,7 @@ var commander = sacloud.createCommander({
 /**
  * Complete
 **/
-commander.complete();
+if (process.platform !== 'win32') commander.complete();
 
 /**
  * Create Requests
