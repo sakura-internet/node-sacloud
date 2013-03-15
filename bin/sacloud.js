@@ -30,11 +30,11 @@ var tableChar = {
 	'bottom-left' : '+',
 	'bottom-right': '+',
 	'left'        : '|',
-	'left-mid'    : '|',
+	'left-mid'    : '+',
 	'mid'         : '-',
 	'mid-mid'     : '+',
 	'right'       : '|',
-	'right-mid'   : '|'
+	'right-mid'   : '+'
 };
 
 /**
@@ -104,13 +104,21 @@ reqs.run(function(err, result, requestedCount, totalCount) {
 		return;
 	}
 	
+	if (opt.quiet) {
+		return;
+	}
+	
 	// status
 	console.log(
-		result.requestInfo.url, '->',
+		result.requestInfo.method.toUpperCase(), result.requestInfo.url, '->',
 		result.responseInfo.status, result.responseInfo.statusText,
 		'(' + requestedCount + '/' + totalCount + ')',
 		'~' + (result.responseInfo.latency / 1000) + 'sec'
 	);
+	
+	if (opt.silent) {
+		return;
+	}
 	
 	if (err) {
 		util.error(err);
@@ -124,6 +132,7 @@ reqs.run(function(err, result, requestedCount, totalCount) {
 	var body = result.response[result.responseInfo.key];
 	
 	switch (result.responseInfo.type) {
+		
 		case 'resources':
 			
 			var h = [];
@@ -132,7 +141,7 @@ reqs.run(function(err, result, requestedCount, totalCount) {
 			!!body[0].name && h.push('name');
 			
 			!!body[0].ipAddress                       && h.push('ipaddress');
-			(result.responseInfo.key === 'ipaddress') && h.push('hostname');
+			(result.responseInfo.key === 'ipAddress') && h.push('hostname');
 			!!body[0].subnet                          && h.push('subnet id');
 			typeof body[0].interface !== 'undefined' && h.push('server id');
 			
@@ -154,7 +163,7 @@ reqs.run(function(err, result, requestedCount, totalCount) {
 				!!res.name && row.push(res.name);
 				
 				typeof res.ipAddress !== 'undefined'     && row.push(res.ipAddress || '');
-				(result.responseInfo.key === 'ipaddress') && row.push(res.hostName || '');
+				(result.responseInfo.key === 'ipAddress') && row.push(res.hostName || '');
 				!!res.subnet                              && row.push(res.subnet.id || '');
 				typeof res.interface !== 'undefined'     && row.push(!!res.interface ? res.interface.server.id : '');
 				
@@ -181,6 +190,10 @@ reqs.run(function(err, result, requestedCount, totalCount) {
 			!!body.description && table.push({ description  : body.description });
 			!!body.tags        && table.push({ tags         : body.tags.join(', ') });
 			!!body.macAddress  && table.push({ 'mac address': body.macAddress });
+			!!body.ipAddress   && table.push({ ipaddress    : body.ipAddress });
+			!!body.subnet      && table.push({ 'subnet id'  : body.subnet.id });
+			typeof body.interface !== 'undefined' && table.push({ 'interface id': !!body.interface ? body.interface.id : '' });
+			typeof body.interface !== 'undefined' && table.push({ 'server id': !!body.interface ? body.interface.server.id : '' });
 			
 			if (result.responseInfo.key === 'server') {
 				table.push({ plan  : [body.serverPlan.id, body.serverPlan.name].join(':') });
@@ -189,7 +202,7 @@ reqs.run(function(err, result, requestedCount, totalCount) {
 				table.push({ status: body.instance.status });
 				
 				//table.push({ 'before status'    : body.instance.beforeStatus });
-				table.push({ 'status changed at': body.instance.statusChangedAt.replace('T', ' ').replace('+09:00', '') });
+				!!body.instance.statusChangedAt && table.push({ 'status changed at': body.instance.statusChangedAt.replace('T', ' ').replace('+09:00', '') });
 				table.push({ 'hypervisor'       : !!body.instance.host ? body.instance.host.systemVersion : '' });
 				
 				!!body.instance.cdrom && table.push({ cdrom:  [body.instance.cdrom.id, body.instance.cdrom.name].join(':') });
@@ -219,6 +232,10 @@ reqs.run(function(err, result, requestedCount, totalCount) {
 				!!body.packetFilter && table.push({ 'packetfilter': [body.packetFilter.id, body.packetFilter.name].join(':') });
 				
 				!!body['switch'] && table.push({ 'switch': [body['switch'].id, body['switch'].name].join(':') });
+			}
+			
+			if (result.responseInfo.key === 'ipAddress') {
+				!!body.hostName   && table.push({ 'hostname'  : body.hostName });
 			}
 			
 			!!body.createdAt && table.push({ 'created at': body.createdAt.replace('T', ' ').replace('+09:00', '') });
