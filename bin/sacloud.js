@@ -133,6 +133,12 @@ reqs.run(function(err, result, requestedCount, totalCount) {
 	
 	switch (result.responseInfo.type) {
 		
+		case 'result':
+			
+			util.puts(util.inspect(result.response, false, null, true));
+			
+			break;
+		
 		case 'resources':
 			
 			var h = [];
