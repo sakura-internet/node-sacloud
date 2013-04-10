@@ -104,12 +104,17 @@ if (opt.args.length === 0 || opt.version) {
 /**
  * Create Requests
 **/
-var reqs = commander.createRequests(opt.args);
+try {
+	var reqs = commander.createRequests(opt.args);
+} catch (e) {
+	!opt.quiet && util.error(e);
+	process.exit(1);
+}
 
 /**
  * Run Requests
 **/
-reqs.run(function(err, result, requestedCount, totalCount) {
+reqs.run(function _callback(err, result, requestedCount, totalCount) {
 	
 	if (opt.json) {
 		if (requestedCount === 1) process.stdout.write('[');
@@ -137,12 +142,12 @@ reqs.run(function(err, result, requestedCount, totalCount) {
 		'~' + (result.responseInfo.latency / 1000) + 'sec'
 	);
 	
-	if (opt.compact) {
-		return;
+	if (err) {
+		!opt.quiet && util.error(err);
+		return process.exit(1);
 	}
 	
-	if (err) {
-		util.error(err);
+	if (opt.compact) {
 		return;
 	}
 	
@@ -216,6 +221,7 @@ reqs.run(function(err, result, requestedCount, totalCount) {
 			!!body.name        && table.push({ name         : body.name });
 			!!body.description && table.push({ description  : body.description });
 			!!body.tags        && table.push({ tags         : body.tags.join(', ') });
+			!!body.status      && table.push({ status       : body.status });
 			!!body.macAddress  && table.push({ 'mac address': body.macAddress });
 			!!body.ipAddress   && table.push({ ipaddress    : body.ipAddress });
 			!!body.subnet      && table.push({ 'subnet id'  : body.subnet.id });
