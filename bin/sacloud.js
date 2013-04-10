@@ -127,11 +127,19 @@ reqs.run(function _callback(err, result, requestedCount, totalCount) {
 			process.stdout.write(',');
 		}
 		
-		return;
+		return process.exit(0);
+	}
+	
+	if (opt.inspect) {
+		util.puts(util.inspect(result, false, null, true));
 	}
 	
 	if (opt.quiet) {
-		return;
+		if (err) {
+			return process.exit(1);
+		}
+		
+		return process.exit(0);
 	}
 	
 	// status
@@ -143,16 +151,12 @@ reqs.run(function _callback(err, result, requestedCount, totalCount) {
 	);
 	
 	if (err) {
-		!opt.quiet && util.error(err);
+		util.error(err);
 		return process.exit(1);
 	}
 	
 	if (opt.compact) {
-		return;
-	}
-	
-	if (opt.inspect) {
-		util.puts(util.inspect(result, false, null, true));
+		return process.exit(0);
 	}
 	
 	var body = result.response[result.responseInfo.key];
@@ -278,5 +282,5 @@ reqs.run(function _callback(err, result, requestedCount, totalCount) {
 			break;
 	}
 	
-	return;
+	return process.exit(0);
 });
