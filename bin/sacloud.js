@@ -49,6 +49,7 @@ if (!!opt.accessTokenSecret) config.accessTokenSecret = opt.accessTokenSecret;
 if (!!opt.apiRoot)           config.apiRoot           = opt.apiRoot;
 
 if (opt.args.length !== 0 && opt.args[0] === 'config') {
+	
 	fs.writeFileSync(configFilePath, JSON.stringify(config, null, '  '));
 	fs.chmodSync(configFilePath, 0600);
 	
@@ -79,6 +80,26 @@ var commander = sacloud.createCommander({
  * Complete
 **/
 if (!isWindows) commander.complete();
+
+/**
+ * Info
+**/
+if (opt.args.length === 0 || opt.version) {
+	
+	var package = require('../package.json');
+	
+	util.puts(
+		[package.name, 'version', package.version].join(' ') + ', Copyright (c) 2013, SAKURA Internet Inc and Contributors.',
+		'  modules: ' + util.inspect(package.dependencies, false, null, true),
+		package.description,
+		'*CLI mode',
+		'usage: ' + 'sacloud [action] [[resource]...] [options]',
+		'',
+		'Use --help to get full help.'
+	);
+	
+	return process.exit(0);
+}
 
 /**
  * Create Requests
@@ -116,7 +137,7 @@ reqs.run(function(err, result, requestedCount, totalCount) {
 		'~' + (result.responseInfo.latency / 1000) + 'sec'
 	);
 	
-	if (opt.silent) {
+	if (opt.compact) {
 		return;
 	}
 	
