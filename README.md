@@ -9,6 +9,6 @@ A [node.js](http://nodejs.org) based command line interface and module for [SAKU
 
 see: https://github.com/sakura-internet/node-sacloud/wiki/Installation
 
-### Configuration (CLI)
+### Configuration
 
-* `sacloud config --accessToken=**** --accessTokenSecret=********`
+see: https://github.com/sakura-internet/node-sacloud/wiki/Configuration
