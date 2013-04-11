@@ -5,12 +5,10 @@ A [node.js](http://nodejs.org) based command line interface and module for [SAKU
 
 ## Usage
 
-### Install (CLI)
+### Installation
 
-* [Install a binary distribution of node.js](http://nodejs.org/#download)
-* `npm install -g sacloud`
+see: https://github.com/sakura-internet/node-sacloud/wiki/Installation
+
+### Configuration (CLI)
+
 * `sacloud config --accessToken=**** --accessTokenSecret=********`
-
-### Install (Module)
-
-* `npm install sacloud`
