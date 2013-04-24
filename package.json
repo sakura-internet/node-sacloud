@@ -22,6 +22,7 @@
     "tav": "~0.1.0",
     "xhr2": "0.0.5",
     "complete": "0.3.1",
-    "cli-table": "git://github.com/kanreisa/cli-table.git"
+    "cli-table": "git://github.com/kanreisa/cli-table.git",
+    "underscore": "~1.4.4"
   }
 }

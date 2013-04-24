@@ -163,11 +163,13 @@ reqs.run(function _callback(err, result, requestedCount, totalCount) {
 	
 	var body = result.response[result.responseInfo.key];
 	
+	if (body === null) return process.exit(0);
+	
 	switch (result.responseInfo.type) {
 		
 		case 'result':
 			
-			util.puts(util.inspect(result.response, false, null, true));
+			util.puts(util.inspect(result.response, { colors: true, depth: 0 }));
 			
 			break;
 		
