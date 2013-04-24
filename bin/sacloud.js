@@ -143,12 +143,14 @@ reqs.run(function _callback(err, result, requestedCount, totalCount) {
 	}
 	
 	// status
-	console.log(
-		result.requestInfo.method.toUpperCase(), result.requestInfo.url, '->',
-		result.responseInfo.status, result.responseInfo.statusText,
-		'(' + requestedCount + '/' + totalCount + ')',
-		'~' + (result.responseInfo.latency / 1000) + 'sec'
-	);
+	if (!opt.csv && !opt.tsv) {
+		console.log(
+			result.requestInfo.method.toUpperCase(), result.requestInfo.url, '->',
+			result.responseInfo.status, result.responseInfo.statusText,
+			'(' + requestedCount + '/' + totalCount + ')',
+			'~' + (result.responseInfo.latency / 1000) + 'sec'
+		);
+	}
 	
 	if (err) {
 		util.error(err);
@@ -187,10 +189,14 @@ reqs.run(function _callback(err, result, requestedCount, totalCount) {
 			
 			!!body[0].createdAt && h.push('created at');
 			
-			var table = new Table({
-				head : h,
-				chars: tableChar
-			});
+			if (opt.csv || opt.tsv) {
+				var table = [h];
+			} else {
+				var table = new Table({
+					head : h,
+					chars: tableChar
+				});
+			}
 			
 			body.forEach(function(res, i) {
 				var row = [];
@@ -212,13 +218,28 @@ reqs.run(function _callback(err, result, requestedCount, totalCount) {
 				table.push(row);
 			});
 			
-			util.puts(table.toString());
+			if (opt.csv || opt.tsv) {
+				var lines = [];
+				
+				table.forEach(function(a) {
+					if (opt.csv) lines.push(a.join(','));
+					if (opt.tsv) lines.push(a.join('\t'));
+				});
+				
+				util.puts(lines.join('\n'));
+			} else {
+				util.puts(table.toString());
+			}
 			
 			break;
 		
 		case 'resource':
 			
-			var table = new Table({ chars: tableChar });
+			if (opt.csv || opt.tsv) {
+				var table = [];
+			} else {
+				var table = new Table({ chars: tableChar });
+			}
 			
 			!!body.id          && table.push({ id           : body.id });
 			!!body.zone        && table.push({ zone         : [body.zone.id, body.zone.name].join(':') });
@@ -277,7 +298,36 @@ reqs.run(function _callback(err, result, requestedCount, totalCount) {
 			
 			!!body.createdAt && table.push({ 'created at': body.createdAt.replace('T', ' ').replace('+09:00', '') });
 			
-			util.puts(table.toString());
+			if (opt.csv || opt.tsv) {
+				var lines = [];
+				var head  = [];
+				var line  = [];
+				
+				table.forEach(function(a) {
+					
+					for (var k in a) {
+						head.push(k);
+						line.push(a[k]);
+					}
+				});
+				
+				if (opt.csv) {
+					lines.push(
+						head.join(',').replace(/(\n|\r)/g, ''),
+						line.join(',').replace(/(\n|\r)/g, '')
+					);
+				}
+				if (opt.tsv) {
+					lines.push(
+						head.join('\t').replace(/(\n|\r)/g, ''),
+						line.join('\t').replace(/(\n|\r)/g, '')
+					);
+				}
+				
+				util.puts(lines.join('\n'));
+			} else {
+				util.puts(table.toString());
+			}
 			
 			break;
 	}
