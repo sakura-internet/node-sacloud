@@ -127,7 +127,7 @@ reqs.run(function _callback(err, result, requestedCount, totalCount) {
 			process.stdout.write(',');
 		}
 		
-		return process.exit(0);
+		return;
 	}
 	
 	if (opt.inspect) {
@@ -139,7 +139,7 @@ reqs.run(function _callback(err, result, requestedCount, totalCount) {
 			return process.exit(1);
 		}
 		
-		return process.exit(0);
+		return;
 	}
 	
 	// status
@@ -158,12 +158,12 @@ reqs.run(function _callback(err, result, requestedCount, totalCount) {
 	}
 	
 	if (opt.compact) {
-		return process.exit(0);
+		return;
 	}
 	
 	var body = result.response[result.responseInfo.key];
 	
-	if (body === null) return process.exit(0);
+	if (body === null) return;
 	
 	switch (result.responseInfo.type) {
 		
@@ -249,6 +249,9 @@ reqs.run(function _callback(err, result, requestedCount, totalCount) {
 			!!body.description && table.push({ description  : body.description });
 			!!body.tags        && table.push({ tags         : body.tags.join(', ') });
 			!!body.status      && table.push({ status       : body.status });
+			!!body.availability&& table.push({ availability : body.availability });
+			!!body.migratedMB  && table.push({ progress     : Math.round(body.migratedMB / body.sizeMB * 100) + '%' });
+			!!body.sizeMB      && table.push({ size         : body.sizeMB + 'MB' });
 			!!body.macAddress  && table.push({ 'mac address': body.macAddress });
 			!!body.ipAddress   && table.push({ ipaddress    : body.ipAddress });
 			!!body.subnet      && table.push({ 'subnet id'  : body.subnet.id });
@@ -334,5 +337,5 @@ reqs.run(function _callback(err, result, requestedCount, totalCount) {
 			break;
 	}
 	
-	return process.exit(0);
+	return;
 });
