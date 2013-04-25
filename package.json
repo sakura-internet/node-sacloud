@@ -1,6 +1,6 @@
 {
   "name": "sacloud",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A Node.js Module and CLI for SAKURA Internet Cloud APIs.",
   "main": "index.js",
   "scripts": {
