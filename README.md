@@ -55,11 +55,13 @@ var request = client.createRequest({
   method: 'POST',
   path  : 'server',
   body  : {
-    zone       : 31001,
-    plan       : 1,
-    name       : 'test-server',
-    description: 'blah blah blah...',
-    tags       : ['test']
+    Server: {
+      Zone       : { ID: 31001 },
+      ServerPlan : { ID: 1 },
+      Name       : 'test-server',
+      Description: 'blah blah blah...',
+      Tags       : ['test']
+    }
   }
 });
 
