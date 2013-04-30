@@ -12,3 +12,7 @@ see: https://github.com/sakura-internet/node-sacloud/wiki/Installation
 ### Configuration
 
 see: https://github.com/sakura-internet/node-sacloud/wiki/Configuration
+
+### Getting started Guide
+
+see: https://github.com/sakura-internet/node-sacloud/wiki/Getting-started-Guide
