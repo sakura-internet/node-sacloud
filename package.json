@@ -1,6 +1,6 @@
 {
-  "name": "node-sacloud",
-  "version": "0.0.0",
+  "name": "sacloud",
+  "version": "0.0.8",
   "description": "A Node.js Module and CLI for SAKURA Internet Cloud APIs.",
   "main": "index.js",
   "scripts": {
@@ -15,5 +15,14 @@
   ],
   "author": "sakura-internet",
   "license": "MIT",
-  "bin": { "sacloud": "./bin/sacloud.js" }
+  "bin": {
+    "sacloud": "./bin/sacloud.js"
+  },
+  "dependencies": {
+    "tav": "~0.1.0",
+    "xhr2": "0.0.5",
+    "complete": "0.3.1",
+    "cli-table": "git://github.com/kanreisa/cli-table.git",
+    "underscore": "~1.4.4"
+  }
 }
