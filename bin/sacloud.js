@@ -175,6 +175,11 @@ reqs.run(function _callback(err, result, requestedCount, totalCount) {
 		
 		case 'resources':
 			
+			if (body.hasOwnProperty('length') && body.length === 0) {
+				console.log('Response of resources is empty');
+				return;
+			}
+			
 			var h = [];
 			
 			!!body[0].id   && h.push('id');
