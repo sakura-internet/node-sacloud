@@ -308,6 +308,14 @@ reqs.run(function _callback(err, result, requestedCount, totalCount) {
 			
 			!!body.createdAt && table.push({ 'created at': body.createdAt.replace('T', ' ').replace('+09:00', '') });
 			
+			if (result.response.ftpServer) {
+				for (var k in result.response.ftpServer) {
+					if (k[0] === '_') continue;
+					eval('var a = { "ftp:' + k + '": "' + result.response.ftpServer[k] + '" }');
+					table.push(a);
+				}
+			}
+			
 			if (opt.csv || opt.tsv) {
 				var lines = [];
 				var head  = [];
