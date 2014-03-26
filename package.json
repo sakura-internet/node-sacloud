@@ -1,6 +1,6 @@
 {
   "name": "sacloud",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "A Node.js Module and CLI for SAKURA Internet Cloud APIs.",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   "dependencies": {
     "tav": "~0.1.0",
     "xhr2": "0.0.5",
-    "complete": "0.3.1",
+    "complete": "0.4.3",
     "cli-table": "git://github.com/kanreisa/cli-table.git",
     "underscore": "~1.4.4"
   }
