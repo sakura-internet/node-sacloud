@@ -14,6 +14,7 @@ var util     = require('util');
  * Initialize
 **/
 var isWindows = (process.platform === 'win32');
+var isBash    = !process.env.SHELL || process.env.SHELL.match(/\/bash$/);
 
 var configFilePath = path.resolve(
 	opt.config ||
@@ -79,7 +80,7 @@ var commander = sacloud.createCommander({
 /**
  * Complete
 **/
-if (!isWindows) commander.complete();
+if (!isWindows && isBash) commander.complete();
 
 /**
  * Info
