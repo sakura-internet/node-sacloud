@@ -194,7 +194,16 @@ reqs.run(function _callback(err, result, requestedCount, totalCount) {
 			if (result.responseInfo.key === 'servers') {
 				h.push('status');
 			}
-			
+			if (result.responseInfo.key === 'serviceClasses') {
+				h.push('service class id');
+				h.push('display name');
+				h.push('region');
+				h.push('price hourly');
+				h.push('price daily');
+				h.push('price monthly');
+
+			}
+
 			!!body[0].createdAt && h.push('created at');
 			
 			if (opt.csv || opt.tsv) {
@@ -219,6 +228,15 @@ reqs.run(function _callback(err, result, requestedCount, totalCount) {
 				
 				if (result.responseInfo.key === 'servers') {
 					row.push(res.instance.status);
+				}
+
+				if (result.responseInfo.key === 'serviceClasses') {
+					row.push(res.serviceClassID || '');
+					row.push(res.displayName || '');
+					row.push(res.price.zone || '');
+					row.push(res.price.hourly || '');
+					row.push(res.price.daily || '');
+					row.push(res.price.monthly || '');
 				}
 				
 				!!res.createdAt && row.push(res.createdAt.replace('T', ' ').replace('+09:00', ''));
