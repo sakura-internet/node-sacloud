@@ -1,57 +1,55 @@
 node-sacloud (sacloud)
 =====================
 
-A [node.js](http://nodejs.org) based command line interface and module for [SAKURA Internet Cloud](http://cloud.sakura.ad.jp/) APIs.
+A [node.js](http://nodejs.org) library for [SAKURA Internet Cloud](http://cloud.sakura.ad.jp/) API.
 
-## Usage
+##  Install
 
-### Installation
-
-see: https://github.com/sakura-internet/node-sacloud/wiki/Installation
-
-### Configuration
-
-see: https://github.com/sakura-internet/node-sacloud/wiki/Configuration
+```
+npm install --save sacloud
+```
 
 ## Getting started
 
-##### Load the module:
+#### Load and create a client instance:
 
 ```javascript
-var sacloud = require('sacloud');
-```
+const sacloud = require("sacloud");
 
-##### Then create a new client:
-
-```javascript
-var client = sacloud.createClient({
+const client = sacloud.createClient({
   accessToken        : 'account_access_token_here',
   accessTokenSecret  : '********',
   disableLocalizeKeys: false,// (optional;default:false) false: lower-camelize the property names in response Object
   debug              : true// (optional;default:false) output debug requests to console.
 });
+
+// select zone
+const zone = "tk1a";
+client.opt.apiRoot = `https://secure.sakura.ad.jp/cloud/zone/${zone}/api/cloud/1.1/`;
 ```
 
-* API-key manager: https://secure.sakura.ad.jp/cloud/#!/pref/apikey/
+* API-key manager: https://secure.sakura.ad.jp/cloud/iaas/#!/pref/apikey/
 
-##### Let's get list of server.
+#### Get Servers:
 
 ```javascript
 client.createRequest({
   method: 'GET',
   path  : 'server'
-}).send(function(err, result) {
+}).send((err, result) => {
   
-  if (err) throw new Error(err);
+  if (err) {
+    throw new Error(err);
+  }
   
   console.log( JSON.stringify(result, null, '  ') );
 });
 ```
 
-##### new server creation
+##### Create Server:
 
 ```javascript
-var request = client.createRequest({
+const request = client.createRequest({
   method: 'POST',
   path  : 'server',
   body  : {
@@ -65,22 +63,21 @@ var request = client.createRequest({
   }
 });
 
-request.send(function(err, result) {
+request.send((err, result) => {
   
-  if (!err) console.log('created successfully! serverId=' + result.response.server.id);
+  if (err) {
+    throw new Error(err);
+  }
+  
+  console.log(`created successfully! serverId=${result.response.server.id}`);
 });
 ```
 
-### CLI?
+## CLI
 
-see: https://github.com/sakura-internet/node-sacloud/wiki/Getting-started-Guide
+has been removed on `@0.1.0`. use [usacloud](https://github.com/sacloud/usacloud).
 
-### API?
+## API Documentation
 
-see: http://developer.sakura.ad.jp/cloud/api/1.0/
+see: http://developer.sakura.ad.jp/cloud/api/1.1/
 
-## Comments / Questions
-
-Please feel free to send any messages: ```@kanreisa``` / ```y-kan at sakura.ad.jp```
-
-Or just open github issues.
